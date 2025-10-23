@@ -3,6 +3,7 @@
   alejandra,
   bash,
   jdk23,
+  just
 }:
 mkShell rec {
   name = "network-infra-lab-06";
@@ -14,6 +15,8 @@ mkShell rec {
     # fix the Makefile.
     bash
     jdk23
+
+    just
 
     # Required for CI for format checking.
     alejandra
