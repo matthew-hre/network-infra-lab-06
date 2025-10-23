@@ -6,11 +6,11 @@ import java.util.*;
 /**
  * loads and indexes words from a file for prefix matching
  * 
- * uses a TreeMap to keep words in sorted order, with case-insensitive
- * prefix lookups. casing is preserved in responses
+ * assumes words are already in alphabetical order in the file
+ * provides case-insensitive prefix lookups, preserving original casing
  */
 public class WordIndex {
-    private TreeMap<String, String> wordMap;
+    private List<String> words;
     
     /**
      * makes a WordIndex and loads words from the specified file
@@ -19,12 +19,12 @@ public class WordIndex {
      * @throws IOException if the file cannot be read
      */
     public WordIndex(String filePath) throws IOException {
-        this.wordMap = new TreeMap<>();
+        this.words = new ArrayList<>();
         loadWords(filePath);
     }
     
     /**
-     * loads words from the file into the word map
+     * loads words from the file into the word list
      * each line is treated as a word. leading/trailing whitespace is removed
      * 
      * @param filePath path to the words file
@@ -33,16 +33,13 @@ public class WordIndex {
     private void loadWords(String filePath) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            int count = 0;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (!line.isEmpty()) {
-                    // store with lowercase key for case-insensitive matching
-                    wordMap.put(line.toLowerCase(), line);
-                    count++;
+                    words.add(line);
                 }
             }
-            System.out.println("Loaded " + count + " words from " + filePath);
+            System.out.println("Loaded " + words.size() + " words from " + filePath);
         }
     }
     
@@ -57,20 +54,13 @@ public class WordIndex {
             return new ArrayList<>();
         }
         
-        String lowerPrefix = prefix.toLowerCase();
         List<String> matches = new ArrayList<>();
+        String lowerPrefix = prefix.toLowerCase();
         
-        // use tailMap to find the starting point
-        // all words >= lowerPrefix will be in the submap
-        SortedMap<String, String> subMap = wordMap.tailMap(lowerPrefix);
-        
-        for (Map.Entry<String, String> entry : subMap.entrySet()) {
-            String key = entry.getKey();
-            // stop when we've gone past words with this prefix
-            if (!key.startsWith(lowerPrefix)) {
-                break;
+        for (String word : words) {
+            if (word.toLowerCase().startsWith(lowerPrefix)) {
+                matches.add(word);
             }
-            matches.add(entry.getValue());
         }
         
         return matches;
@@ -82,6 +72,6 @@ public class WordIndex {
      * @return the number of words
      */
     public int getWordCount() {
-        return wordMap.size();
+        return words.size();
     }
 }

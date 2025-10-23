@@ -3,11 +3,14 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class TCPServer {
 	public static void main(String argv[]) throws Exception {
 		String clientSentence;
-		String capitalizedSentence;
+		String results;
+
+		WordIndex wordIndex = new WordIndex("data/words.txt");
 
 		ServerSocket welcomeSocket = new ServerSocket(6789);
 
@@ -27,9 +30,11 @@ public class TCPServer {
 				while (true) {
 					clientSentence = inFromClient.readLine();
 
-					capitalizedSentence = clientSentence.toUpperCase() + '\n';
+					List<String> foundWords = wordIndex.findWordsWithPrefix(clientSentence);
 
-					outToClient.writeBytes(capitalizedSentence);
+					results = String.join(", ", foundWords);
+
+					outToClient.writeBytes("The following words start with " + clientSentence + ": " + results + '\n');
 				}
 			} catch (Exception e) {
 				// TODO: handle exception, if client closed connection, print:

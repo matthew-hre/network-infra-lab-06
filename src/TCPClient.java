@@ -7,7 +7,7 @@ public class TCPClient {
 
 	public static void main(String argv[]) throws Exception {
 		String sentence;
-		String modifiedSentence;
+		String foundWords;
 
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
@@ -25,9 +25,9 @@ public class TCPClient {
 		while (sentence.toLowerCase().compareTo("exit") != 0) {
 			outToServer.writeBytes(sentence + '\n');
 
-			modifiedSentence = inFromServer.readLine();
+			foundWords = inFromServer.readLine();
 
-			System.out.println("FROM SERVER: " + modifiedSentence);
+			System.out.println(foundWords);
 			sentence = inFromUser.readLine();
 		}
 
