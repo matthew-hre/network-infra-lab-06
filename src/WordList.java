@@ -7,18 +7,17 @@ import java.util.*;
  * loads and indexes words from a file for prefix matching
  * 
  * assumes words are already in alphabetical order in the file
- * provides case-insensitive prefix lookups, preserving original casing
  */
-public class WordIndex {
+public class WordList {
     private List<String> words;
     
     /**
-     * makes a WordIndex and loads words from the specified file
+     * makes a WordList and loads words from the specified file
      * 
      * @param filePath path to the words file (one word per line)
      * @throws IOException if the file cannot be read
      */
-    public WordIndex(String filePath) throws IOException {
+    public WordList(String filePath) throws IOException {
         this.words = new ArrayList<>();
         loadWords(filePath);
     }
